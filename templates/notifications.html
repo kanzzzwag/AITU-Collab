@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Inbox - AITU Collab</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        :root { --bg: #0f0f13; --card-bg: #1c1c24; --text-main: #f1f2f6; --text-muted: #a4b0be; --accent: #6c5ce7; --border: #333344; --success: #2ecc71; --danger: #e74c3c; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text-main); margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 800px; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px 30px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .btn { padding: 10px 20px; background: var(--accent); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; }
+        .btn-accept { background: var(--success); } .btn-decline { background: var(--danger); }
+        .request-card { background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); border-left: 4px solid #f39c12; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-start; }
+        .profile-box { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-top: 15px; font-size: 0.9em; }
+        .skill-tag { background: rgba(108, 92, 231, 0.1); color: var(--accent); padding: 4px 8px; border-radius: 10px; font-weight: bold; }
+        .flash-msg { text-align: center; font-weight: bold; padding: 10px; margin-bottom: 15px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <h2 style="margin: 0;">📥 Inbox & Notifications</h2>
+            <a href="{{ url_for('dashboard') }}" class="btn">Back to Feed</a>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-msg" style="color: {% if category == 'success' %}#2ecc71{% else %}#e74c3c{% endif %}; border: 1px solid currentColor;">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% for req in requests %}
+            <div class="request-card">
+                <div>
+                    <h3 style="margin-top: 0;">{{ req.sender.username }} wants to join!</h3>
+                    <p style="color: var(--text-muted); margin: 5px 0;"><strong>Project:</strong> {{ req.project.title }}</p>
+                    
+                    <div class="profile-box">
+                        <strong style="color: var(--text-main);">Applicant Profile:</strong><br><br>
+                        <span style="color: var(--text-muted);">Major:</span> {{ req.sender.major or 'Not specified' }} <br>
+                        <span style="color: var(--text-muted);">Year:</span> {{ req.sender.course_year or 'Not specified' }} <br>
+                        <span style="color: var(--text-muted);">Skills:</span> 
+                        {% if req.sender.skills %}<span class="skill-tag">{{ req.sender.skills }}</span>{% else %}Not specified{% endif %}
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <form method="POST" action="{{ url_for('manage_request', request_id=req.id, action='accept') }}"><button type="submit" class="btn btn-accept">Accept</button></form>
+                    <form method="POST" action="{{ url_for('manage_request', request_id=req.id, action='decline') }}"><button type="submit" class="btn btn-decline">Decline</button></form>
+                </div>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 50px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border);">
+                <h3 style="color: var(--text-muted);">No new requests.</h3>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

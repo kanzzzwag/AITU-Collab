@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chats - AITU Collab</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+
+    <style>
+        :root { --bg: #0f0f13; --card-bg: #1c1c24; --text-main: #f1f2f6; --text-muted: #a4b0be; --accent: #6c5ce7; --accent-hover: #5b4bc4; --border: #333344; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); color: var(--text-main); padding: 40px; margin: 0; display: flex; flex-direction: column; align-items: center;}
+        
+        .container { width: 100%; max-width: 600px; }
+        
+        .chat-card { background: var(--card-bg); padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); border-left: 4px solid var(--accent); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.2s;}
+        .chat-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        
+        .btn { padding: 10px 15px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; transition: 0.2s;}
+        .btn:hover { background: var(--accent-hover); }
+        
+        .back-link { color: var(--text-muted); text-decoration: none; margin-bottom: 20px; display: inline-block; transition: 0.2s; font-weight: bold;}
+        .back-link:hover { color: var(--text-main); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+        <h1 style="margin-top: 0; margin-bottom: 30px;">My Chat Rooms</h1>
+        
+        {% for room in chat_rooms %}
+        <div class="chat-card">
+            <div>
+                <h3 style="margin: 0; margin-bottom: 5px;">{{ room.title }} Team</h3>
+                <p style="margin: 0; color: var(--text-muted); font-size: 0.9em;">Author: {{ room.author.username }}</p>
+            </div>
+            <a href="{{ url_for('chat_room', project_id=room.id) }}" class="btn">Enter Chat</a>
+        </div>
+        {% else %}
+            <div style="text-align: center; padding: 40px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border);">
+                <p style="color: var(--text-muted); margin: 0;">You haven't joined any project teams yet.</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

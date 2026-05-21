@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Profile - AITU Collab</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        :root {
+            --bg: #0f0f13;
+            --card-bg: #1c1c24;
+            --text-main: #f1f2f6;
+            --text-muted: #a4b0be;
+            --accent: #6c5ce7;
+            --accent-hover: #5b4bc4;
+            --border: #333344;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+            box-sizing: border-box;
+        }
+
+        .form-container { 
+            background: var(--card-bg); 
+            padding: 40px; 
+            border-radius: 15px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            width: 100%; 
+            max-width: 500px; 
+        }
+
+        h2 { text-align: center; margin-top: 0; margin-bottom: 5px; }
+        .email-display { text-align: center; color: var(--text-muted); margin-top: 0; margin-bottom: 30px; font-size: 0.9em; }
+
+        .pic-section { text-align: center; margin-bottom: 30px; }
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent); margin-bottom: 15px; background: #252530; }
+        
+        /* Custom styling for the file input */
+        input[type="file"]::file-selector-button {
+            background-color: var(--border); color: var(--text-main); border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; transition: 0.2s; margin-right: 10px;
+        }
+        input[type="file"]::file-selector-button:hover { background-color: var(--text-muted); color: #000; }
+
+        label { font-weight: bold; color: var(--text-muted); font-size: 0.9em; margin-bottom: 8px; display: block; }
+        
+        input[type="text"], select, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 20px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            background: rgba(255,255,255,0.03); 
+            color: var(--text-main); 
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.06); }
+
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: var(--accent); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            margin-top: 10px;
+        }
+        button:hover { background-color: var(--accent-hover); }
+
+        .back-link { display: block; text-align: center; margin-top: 25px; text-decoration: none; color: var(--text-muted); transition: 0.2s; }
+        .back-link:hover { color: var(--text-main); }
+        
+        .flash-msg { background: rgba(46, 204, 113, 0.1); color: #2ecc71; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #2ecc71; margin-bottom: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Edit Profile</h2>
+        <p class="email-display">{{ current_user.email }}</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-msg">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="{{ url_for('profile') }}" enctype="multipart/form-data">
+            
+            <div class="pic-section">
+                <img src="{{ url_for('static', filename='uploads/' + (current_user.profile_pic or 'default.png')) }}" class="profile-pic" alt="Profile Picture">
+                <br>
+                <input type="file" name="profile_pic" accept="image/*">
+            </div>
+
+            <label>Username</label>
+            <input type="text" name="username" value="{{ current_user.username }}" required>
+            
+            <label>Major</label>
+            <input type="text" name="major" placeholder="e.g., Software Engineering" value="{{ current_user.major or '' }}">
+            
+            <label>Course Year</label>
+            <select name="course_year">
+                <option value="" disabled {% if not current_user.course_year %}selected{% endif %}>Select your year</option>
+                <option value="1st Year" {% if current_user.course_year == '1st Year' %}selected{% endif %}>1st Year</option>
+                <option value="2nd Year" {% if current_user.course_year == '2nd Year' %}selected{% endif %}>2nd Year</option>
+                <option value="3rd Year" {% if current_user.course_year == '3rd Year' %}selected{% endif %}>3rd Year</option>
+                <option value="4th Year" {% if current_user.course_year == '4th Year' %}selected{% endif %}>4th Year</option>
+            </select>
+            
+            <label>Hard & Soft Skills</label>
+            <input type="text" name="skills" placeholder="e.g., Python, C++, Django, Leadership" value="{{ current_user.skills or '' }}">
+            
+            <label>About Me (Bio)</label>
+            <textarea name="bio" rows="4" placeholder="Tell potential teammates a bit about yourself...">{{ current_user.bio or '' }}</textarea>
+            
+            <button type="submit">Save Changes</button>
+        </form>
+        
+        <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+
+</body>
+</html>

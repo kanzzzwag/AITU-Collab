@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Log In - AITU Collab</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        :root { --bg: #0f0f13; --card-bg: #1c1c24; --text-main: #f1f2f6; --text-muted: #a4b0be; --accent: #6c5ce7; --border: #333344; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text-main); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .form-container { background: var(--card-bg); padding: 40px; border-radius: 15px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 320px; text-align: center; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.03); color: white; }
+        button { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        a { color: var(--text-muted); text-decoration: none; font-size: 0.9em; } a:hover { color: white; }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Log In to AITU Collab</h2>
+        <form method="POST" action="/login">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Log In</button>
+        </form>
+        <br>
+        <a href="/register">Need an account? Sign up</a>
+    </div>
+</body>
+</html>

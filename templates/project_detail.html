@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ project.title }} - AITU Collab</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        :root { --bg: #0f0f13; --card-bg: #1c1c24; --text-main: #f1f2f6; --text-muted: #a4b0be; --accent: #6c5ce7; --border: #333344; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text-main); display: flex; justify-content: center; padding: 40px 20px; margin: 0; }
+        .detail-card { background: var(--card-bg); padding: 40px; border-radius: 15px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 100%; max-width: 600px; }
+        .tag { background: rgba(108, 92, 231, 0.1); color: var(--accent); padding: 5px 12px; border-radius: 20px; font-weight: bold; display: inline-block; margin-top: 10px; }
+        .btn { padding: 12px 20px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 20px; transition: 0.2s; }
+        .btn:hover { background: #5b4bc4; }
+        .btn-disabled { background-color: var(--border); color: var(--text-muted); cursor: not-allowed; }
+        .back-link { display: block; margin-bottom: 20px; text-decoration: none; color: var(--text-muted); font-weight: bold;}
+    </style>
+</head>
+<body>
+    <div class="detail-card">
+        <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Feed</a>
+        
+        <h1 style="margin-bottom: 5px;">{{ project.title }}</h1>
+        <p style="color: var(--text-muted); margin-top: 0; padding-bottom: 15px; border-bottom: 1px solid var(--border);">
+            Author: <a href="{{ url_for('public_profile', user_id=project.author_id) }}" style="color: var(--accent); font-weight: bold;">{{ project.author.username }}</a> | Course: {{ project.course_name }}
+        </p>
+        
+        <h3 style="color: var(--text-muted);">Detailed Description</h3>
+        <p style="line-height: 1.6;">{{ project.description }}</p>
+        
+        <h3 style="color: var(--text-muted);">Required Skills</h3>
+        <span class="tag">{{ project.required_skills }}</span>
+        
+        <h3 style="margin-top: 30px; color: var(--text-muted);">Team Status</h3>
+        <p style="color: #2ecc71; font-weight: bold; font-size: 1.1em;">Looking for: {{ project.partners_needed }} person(s)</p>
+
+        {% if current_user.id == project.author_id %}
+            <p style="color: #f39c12; font-weight: bold;">You are the author of this project.</p>
+        {% elif existing_request %}
+            <button class="btn btn-disabled" disabled>Request Pending</button>
+        {% else %}
+            <form method="POST" action="{{ url_for('join_project', project_id=project.id) }}">
+                <button type="submit" class="btn">Send Join Request</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>

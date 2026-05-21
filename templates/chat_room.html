@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ project.title }} Chat</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        :root { --bg: #0f0f13; --card-bg: #1c1c24; --text-main: #f1f2f6; --text-muted: #a4b0be; --accent: #6c5ce7; --border: #333344; }
+        body { font-family: sans-serif; background: var(--bg); color: var(--text-main); margin: 0; display: flex; justify-content: center; height: 100vh; }
+        .chat-container { width: 100%; max-width: 800px; background: var(--card-bg); display: flex; flex-direction: column; height: 100vh; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+        .header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; background: #15151c; }
+        .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .msg { max-width: 70%; padding: 10px 15px; border-radius: 15px; font-size: 0.95em; }
+        .msg.mine { align-self: flex-end; background: var(--accent); color: white; border-bottom-right-radius: 2px; }
+        .msg.others { align-self: flex-start; background: #2a2a35; color: var(--text-main); border-bottom-left-radius: 2px; }
+        .sender-name { font-size: 0.75em; color: var(--text-muted); margin-bottom: 4px; display: block; }
+        .input-area { padding: 20px; border-top: 1px solid var(--border); display: flex; gap: 10px; background: #15151c; }
+        input[type="text"] { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; outline: none; }
+        button { padding: 12px 20px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="header">
+            <a href="{{ url_for('chats') }}" style="color: var(--text-muted); text-decoration: none;">← Back</a>
+            <h2 style="margin: 0;">{{ project.title }} Team</h2>
+        </div>
+        
+        <div class="messages" id="msg-box">
+            {% for msg in messages %}
+                <div class="msg {% if msg.sender_id == current_user.id %}mine{% else %}others{% endif %}">
+                    {% if msg.sender_id != current_user.id %}
+                        <span class="sender-name">{{ msg.sender.username }}</span>
+                    {% endif %}
+                    {{ msg.content }}
+                </div>
+            {% else %}
+                <p style="text-align: center; color: var(--text-muted); margin-top: auto; margin-bottom: auto;">No messages yet. Say hello!</p>
+            {% endfor %}
+        </div>
+        
+        <form class="input-area" method="POST">
+            <input type="text" name="content" placeholder="Type a message..." required autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script>
+        // Auto-scroll to bottom of chat
+        const msgBox = document.getElementById("msg-box");
+        msgBox.scrollTop = msgBox.scrollHeight;
+    </script>
+</body>
+</html>

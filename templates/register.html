@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign Up - AITU Collab</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        :root { 
+            --bg: #0f0f13; 
+            --card-bg: #1c1c24; 
+            --text-main: #f1f2f6; 
+            --text-muted: #a4b0be; 
+            --accent: #6c5ce7; 
+            --accent-hover: #5b4bc4; 
+            --border: #333344; 
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text-main); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .form-container { 
+            background: var(--card-bg); 
+            padding: 40px; 
+            border-radius: 15px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            width: 100%;
+            max-width: 350px; 
+            text-align: center; 
+        }
+        
+        h2 { 
+            margin-top: 0; 
+            margin-bottom: 5px; 
+        }
+        
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+        
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 15px; 
+            border: 1px solid var(--border); 
+            border-radius: 8px; 
+            background: rgba(255,255,255,0.03); 
+            color: white; 
+            box-sizing: border-box;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        
+        input:focus { 
+            outline: none; 
+            border-color: var(--accent); 
+            background: rgba(255,255,255,0.06); 
+        }
+        
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+            font-size: 1rem;
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: 0.2s;
+        }
+        
+        button:hover { 
+            background: var(--accent-hover); 
+        }
+        
+        a { 
+            color: var(--text-muted); 
+            text-decoration: none; 
+            font-size: 0.9em; 
+            transition: 0.2s;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        
+        a:hover { 
+            color: white; 
+        }
+
+        .flash-msg { 
+            background: rgba(231, 76, 60, 0.1); 
+            color: #e74c3c; 
+            padding: 10px; 
+            border-radius: 8px; 
+            border: 1px solid #e74c3c; 
+            margin-bottom: 20px; 
+            font-weight: bold; 
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Join AITU Collab</h2>
+        <p class="subtitle">Find your perfect project partner.</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-msg">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/register">
+            <input type="text" name="username" placeholder="Username" required autocomplete="off">
+            <input type="email" name="email" placeholder="AITU Email" required autocomplete="email">
+            <input type="password" name="password" placeholder="Create Password" required>
+            
+            <button type="submit">Sign Up</button>
+        </form>
+        
+        <a href="/login">Already have an account? Log in here.</a>
+    </div>
+
+</body>
+</html>
