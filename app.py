@@ -8,7 +8,6 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from datetime import datetime
 import uuid
 
-# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
@@ -37,13 +36,13 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(50), nullable=False, unique=True)
     email = db.Column(db.String(120), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False)
-    profile_picture = db.Column(db.String(255), nullable=True, default='default.png') # Optional field for profile picture URL
+    profile_picture = db.Column(db.String(255), nullable=True, default='default.png')
     
     # Profile Info
     course_year = db.Column(db.String(20), nullable=True)
     major = db.Column(db.String(100), nullable=True)
     bio = db.Column(db.Text, nullable=True)
-    skills = db.Column(db.String(255), nullable=True) # e.g., "Python, UI/UX, Design"
+    skills = db.Column(db.String(255), nullable=True)
 
     # Relationships
     projects = db.relationship('Project', backref='author', lazy=True)
@@ -60,7 +59,7 @@ class Project(db.Model):
     partners_needed = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(20), default='Open') # Open or Closed
     
-    # Foreign Key linking to User
+    # Foreign Key linking to the user
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     # Relationship
@@ -260,12 +259,10 @@ def profile():
         current_user.skills = request.form.get('skills')
         current_user.bio = request.form.get('bio')
         
-        # Handle Image Upload with UUID
+        # uuid
         pic = request.files.get('profile_pic')
         if pic and pic.filename != '':
-            # Get the file extension (e.g., .jpg, .png)
             ext = os.path.splitext(pic.filename)[1]
-            # Create a random, safe filename (e.g., 5f4dcc3b5aa765d61d8327deb882cf99.png)
             unique_filename = str(uuid.uuid4()) + ext
             
             pic.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
@@ -282,7 +279,7 @@ def profile():
 def chat_room(project_id):
     project = Project.query.get_or_404(project_id)
     
-    # Security: Only author or accepted members can view the chat
+    # Only author or accepted members can view the chat
     is_author = project.author_id == current_user.id
     is_member = JoinRequest.query.filter_by(sender_id=current_user.id, project_id=project.id, status='Accepted').first()
     
@@ -313,19 +310,19 @@ def chats():
 @app.route('/user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 def public_profile(user_id):
-    # Get the user we are looking at
+    # get the user we are looking at
     target_user = User.query.get_or_404(user_id)
     
     if request.method == 'POST':
-        # Ensure users can't review themselves
+        # make sure users can't review themselves
         if target_user.id == current_user.id:
             flash("You cannot review yourself!", "danger")
             return redirect(url_for('public_profile', user_id=target_user.id))
             
-        # Get the star rating from the form
+        # get the star rating from the form
         stars = int(request.form.get('stars'))
         
-        # Save to database
+        # save to database
         new_review = Review(stars=stars, reviewer_id=current_user.id, reviewee_id=target_user.id)
         db.session.add(new_review)
         db.session.commit()
@@ -333,15 +330,14 @@ def public_profile(user_id):
         flash(f"You left a {stars}-star review for {target_user.username}!", "success")
         return redirect(url_for('public_profile', user_id=target_user.id))
         
-    # Calculate their average rating to display
+    # calculate their average rating to display
     reviews = Review.query.filter_by(reviewee_id=target_user.id).all()
     avg_rating = round(sum(r.stars for r in reviews) / len(reviews), 1) if reviews else "No reviews yet"
     
     return render_template('public_profile.html', target_user=target_user, reviews=reviews, avg_rating=avg_rating)
 
-# Initialize the database tables
+# initialize the database tables
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        print("Database tables created successfully!")
     app.run(debug=True)

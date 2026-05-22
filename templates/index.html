@@ -3,26 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AITU Collab</title>
+    <title>AITU Collab - Student Synergy</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;800;900&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin-top: 100px; background-color: #f4f4f9; }
-        h1 { color: #2c3e50; font-size: 3rem; }
-        p { color: #7f8c8d; font-size: 1.2rem; margin-bottom: 40px; }
-        .btn { padding: 10px 25px; margin: 10px; text-decoration: none; color: white; border-radius: 5px; font-weight: bold; }
-        .btn-login { background-color: #3498db; }
-        .btn-signup { background-color: #2ecc71; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Urbanist', sans-serif;
+        }
+
+        body {
+            background-color: #0f0f13;
+            color: #f1f2f6;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.15) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(222, 255, 154, 0.1) 0%, transparent 70%);
+            z-index: 0;
+        }
+
+        .hero-container {
+            text-align: center;
+            z-index: 1;
+            padding: 40px;
+            max-width: 800px;
+        }
+
+        .badge {
+            display: inline-block;
+            background-color: rgba(222, 255, 154, 0.1);
+            color: #deff9a;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(222, 255, 154, 0.2);
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            color: #f1f2f6;
+        }
+
+        h1 span {
+            color: #6c5ce7; /* Accent Purple */
+        }
+
+        p {
+            font-size: 1.4rem;
+            color: #a4b0be;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #deff9a;
+            color: #0f0f13;
+            box-shadow: 0 4px 15px rgba(222, 255, 154, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #d1f57a;
+            box-shadow: 0 6px 20px rgba(222, 255, 154, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #f1f2f6;
+            border: 2px solid #333344;
+        }
+
+        .btn-secondary:hover {
+            border-color: #6c5ce7;
+            background-color: rgba(108, 92, 231, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
+    <div class="grid-overlay"></div>
 
-    <h1>AITU Collab</h1>
-    <p>Find your perfect project partner at AITU.</p>
-    
-    <div>
-        <a href="{{ url_for('login') }}" class="btn btn-login">Log In</a>
-        <a href="{{ url_for('register') }}" class="btn btn-signup">Sign Up</a>
+    <div class="hero-container">
+        <div class="badge">ASTANA IT UNIVERSITY</div>
+        <h1>AITU <span>Collab</span></h1>
+        <p>The exclusive platform for students to form elite teams, discover high-stakes projects, and conquer hackathons.</p>
+        
+        <div class="btn-group">
+            <a href="{{ url_for('register') }}" class="btn btn-primary">Get Started</a>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary">Log In</a>
+        </div>
     </div>
-
 </body>
 </html>
