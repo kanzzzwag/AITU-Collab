@@ -2,7 +2,6 @@
 
 A full-stack web platform designed exclusively for Astana IT University students to form teams, post academic project ideas, and find partners for hackathons like GDG DevFest. 
 
-**Live Demo:** [Insert Your Railway Link Here]
 
 ## Project Overview
 Finding the right teammates with the right skills can be the hardest part of any hackathon or group project. AITU Collab solves this by providing a centralized feed where students can post open positions, review applicant skills, and manage their project teams in a sleek, dark-mode environment.
